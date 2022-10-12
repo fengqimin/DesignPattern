@@ -1242,11 +1242,11 @@ p.busy = 'Yes'
 p.work()
 ```
 
-# 行为型
+## 行为型
 
-## <span lang="EN-US">13. Interpreter（解释器）
+### 13. Interpreter（解释器）
 
-![](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001090812703-551743707.gif)
+![解释器](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001090812703-551743707.gif)
 
 **意图：**
 
@@ -1260,43 +1260,20 @@ p.work()
 
 效率不是一个关键问题最高效的解释器通常不是通过直接解释语法分析树实现的,而是首先将它们转换成另一种形式。例如，正则表达式通常被转换成状态机。但即使在这种情况下,转换器仍可用解释器模式实现,该模式仍是有用的。
 
-<div class="cnblogs_Highlighter">
-<pre class="brush:python;gutter:true;">#!/usr/bin/python
+```python
+#!/usr/bin/python
 # coding:utf8
 '''
 Interpreter
 '''
 
-class Context:
-def **init**(self):
-self.input=""
-self.output=""
 
-class AbstractExpression:
-def Interpret(self,context):
-pass
 
-class Expression(AbstractExpression):
-def Interpret(self,context):
-print "terminal interpret"
+```
 
-class NonterminalExpression(AbstractExpression):
-def Interpret(self,context):
-print "Nonterminal interpret"
+### 14. Template Method（模板方法）
 
-if **name** == "**main**":
-context= ""
-c = []
-c = c + [Expression()]
-c = c + [NonterminalExpression()]
-c = c + [Expression()]
-c = c + [Expression()]
-for a in c:
-a.Interpret(context)
-
-## <span lang="EN-US">14. Template Method（模板方法）
-
-![](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001091921547-1734506577.gif)
+![模板方法](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001091921547-1734506577.gif)
 
 **意图：**
 
@@ -1311,8 +1288,8 @@ a.Interpret(context)
 
 控制子类扩展。模板方法只在特定点调用“hook ”操作（参见效果一节），这样就只允许在这些点进行扩展。
 
-<div class="cnblogs_Highlighter">
-<pre class="brush:python;gutter:true;">#!/usr/bin/python
+```python
+#!/usr/bin/python
 # coding:utf8
 '''
 Template Method
@@ -1370,10 +1347,11 @@ for s in (iter_elements, rev_elements)]
 
 for template in templates:
 template()
+```
 
-## <span lang="EN-US">15. Chain of Responsibility（责任链）
+### 15. Chain of Responsibility（责任链）
 
-![](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001092311094-692760233.gif)
+![责任链](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001092311094-692760233.gif)
 
 **意图：**
 
@@ -1386,58 +1364,15 @@ template()
 你想在不明确指定接收者的情况下，向多个对象中的一个提交一个请求。
 
 可处理一个请求的对象集合应被动态指定。
+**实现：**
 
-<div class="cnblogs_Highlighter">
-<pre class="brush:python;gutter:true;">#!/usr/bin/python
-# coding:utf8
+```python
 
-"""
-Chain
-"""
-class Handler:
-def successor(self, successor):
-self.successor = successor
+```
 
-class ConcreteHandler1(Handler):
-def handle(self, request):
-if request &gt; 0 and request &lt;= 10:
-print("in handler1")
-else:
-self.successor.handle(request)
+### 16. Command（命令）
 
-class ConcreteHandler2(Handler):
-def handle(self, request):
-if request &gt; 10 and request &lt;= 20:
-print("in handler2")
-else:
-self.successor.handle(request)
-
-class ConcreteHandler3(Handler):
-def handle(self, request):
-if request &gt; 20 and request &lt;= 30:
-print("in handler3")
-else:
-print('end of chain, no handler for {}'.format(request))
-
-class Client:
-def **init**(self):
-h1 = ConcreteHandler1()
-h2 = ConcreteHandler2()
-h3 = ConcreteHandler3()
-
-        h1.successor(h2)
-        h2.successor(h3)
-
-        requests = [2, 5, 14, 22, 18, 3, 35, 27, 20]
-        for request in requests:
-            h1.handle(request)
-
-if **name** == "**main**":
-client = Client()
-
-## <span lang="EN-US">16. Command（命令）
-
-![](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001093244063-1060485648.gif)
+![命令](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001093244063-1060485648.gif)
 
 **意图：**
 
@@ -1457,8 +1392,8 @@ back）函数表达这种参数化机制。所谓回调函数是指函数先在�
 用构建在原语操作上的高层操作构造一个系统。这样一种结构在支持事务( transaction)
 的信息系统中很常见。一个事务封装了对数据的一组变动。Command模式提供了对事务进行建模的方法。Command有一个公共的接口，使得你可以用同一种方式调用所有的事务。同时使用该模式也易于添加新事务以扩展系统。
 
-<div class="cnblogs_Highlighter">
-<pre class="brush:python;gutter:true;">#!/usr/bin/python
+```python
+#!/usr/bin/python
 # coding:utf8
 
 """
@@ -1496,10 +1431,11 @@ command_stack = []
     # and can also be undone at will
     for cmd in reversed(command_stack):
         cmd.undo()
+```
 
-## <span lang="EN-US">17. Iterator（迭代器）
+### 17. Iterator（迭代器）
 
-![](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001094329172-309095903.gif)
+![迭代器](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001094329172-309095903.gif)
 
 **意图：**
 
@@ -1513,8 +1449,8 @@ command_stack = []
 
 为遍历不同的聚合结构提供一个统一的接口(即,支持多态迭代)。
 
-<div class="cnblogs_Highlighter">
-<pre class="brush:python;gutter:true;">#!/usr/bin/python
+```python
+#!/usr/bin/python
 # coding:utf8
 '''
 Interator
@@ -1543,10 +1479,11 @@ for number in count_to_five():
 print number
 
 print " "
+```
 
-## <span lang="EN-US">18. Mediator（中介者）
+### 18. Mediator（中介者）
 
-![](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001094749000-380429958.gif)
+![中介者](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001094749000-380429958.gif)
 
 **意图：**
 
@@ -1560,8 +1497,8 @@ print " "
 
 想定制一个分布在多个类中的行为，而又不想生成太多的子类。
 
-<div class="cnblogs_Highlighter">
-<pre class="brush:python;gutter:true;">#!/usr/bin/python
+```python
+#!/usr/bin/python
 # coding:utf8
 '''
 Mediator
@@ -1682,10 +1619,11 @@ tm.setTC(tc)
 tc.setup()
 tc.execute()
 tc.tearDown()
+```
 
-## <span lang="EN-US">19. Memento（备忘录）
+### 19. Memento（备忘录）
 
-![](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001095443000-87266383.gif)
+![备忘录](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001095443000-87266383.gif)
 
 **意图：**
 
@@ -1697,8 +1635,8 @@ tc.tearDown()
 
 如果一个用接口来让其它对象直接得到这些状态，将会暴露对象的实现细节并破坏对象的封装性。
 
-<div class="cnblogs_Highlighter">
-<pre class="brush:python;gutter:true;">#!/usr/bin/python
+```python
+#!/usr/bin/python
 # coding:utf8
 '''
 Memento
@@ -1791,10 +1729,11 @@ import traceback
 traceback.print_exc(0)
 pass
 print(n)
+```
 
-## <span lang="EN-US">20. Observer（观察者）
+### 20. Observer（观察者）
 
-![](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001095725391-893775521.gif)
+![观察者](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001095725391-893775521.gif)
 
 **意图：**
 
@@ -1808,6 +1747,7 @@ print(n)
 
 当一个对象必须通知其它对象，而它又不能假定其它对象是谁。换言之,你不希望这些对象是紧密耦合的。
 
+```python
 <div class="cnblogs_Highlighter">
 <pre class="brush:python;gutter:true;">#!/usr/bin/python
 # coding:utf8
@@ -1891,10 +1831,11 @@ data2.attach(view1)
 
 if **name** == '**main**':
 main()
+```
 
-## <span lang="EN-US">21. State（状态）
+### 21. State（状态）
 
-![](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001100150906-852963744.gif)
+![状态](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001100150906-852963744.gif)
 
 **意图：**
 
@@ -1906,8 +1847,8 @@ main()
 
 一个操作中含有庞大的多分支的条件语句，且这些分支依赖于该对象的状态。这个状态通常用一个或多个枚举常量表示。通常,有多个操作包含这一相同的条件结构。State模式将每一个条件分支放入一个独立的类中。这使得你可以根据对象自身的情况将对象的状态作为一个对象，这一对象可以不依赖于其他对象而独立变化。
 
-<div class="cnblogs_Highlighter">
-<pre class="brush:python;gutter:true;">#!/usr/bin/python
+```python
+#!/usr/bin/python
 # coding:utf8
 '''
 State
@@ -1968,10 +1909,11 @@ actions = actions * 2
 
     for action in actions:
         action()
+```
 
-## <span lang="EN-US">22. Strategy（策略）
+### 22. Strategy（策略）
 
-![](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001100423828-707061510.gif)
+![策略](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001100423828-707061510.gif)
 
 **意图：**
 
@@ -2035,7 +1977,7 @@ if ** name ** == '**main**':
     strat2.execute()
 ```
 
-## 23. Visitor（访问者）
+### 23. Visitor（访问者）
 
 ![访问者](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001100727844-1430710049.gif)
 
