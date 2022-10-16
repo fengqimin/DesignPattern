@@ -2118,13 +2118,15 @@ if __name__ == '__main__':
 ```python
 #!/usr/bin/python
 # coding:utf8
-'''
+"""
 Observer
-'''
+"""
+from abc import abstractmethod
+
 
 class Subject(object):
-def **init**(self):
-self._observers = []
+    def __init__(self):
+        self._observers = []
 
     def attach(self, observer):
         if not observer in self._observers:
@@ -2141,13 +2143,13 @@ self._observers = []
             if modifier != observer:
                 observer.update(self)
 
-# Example usage
 
+# Example usage
 class Data(Subject):
-def **init**(self, name=''):
-Subject.**init**(self)
-self.name = name
-self._data = 0
+    def __init__(self, name=''):
+        Subject.__init__(self)
+        self.name = name
+        self._data: int = 0
 
     @property
     def data(self):
@@ -2158,73 +2160,98 @@ self._data = 0
         self._data = value
         self.notify()
 
-class HexViewer:
-def update(self, subject):
-print('HexViewer: Subject %s has data 0x%x' %
-(subject.name, subject.data))
 
-class DecimalViewer:
-def update(self, subject):
-print('DecimalViewer: Subject %s has data %d' %
-(subject.name, subject.data))
+class Observer:
+    @abstractmethod
+    def update(self):
+        pass
 
-# Example usage
 
+class HexViewer(Observer):
+    def update(self, subject: Subject):
+        print(
+            f'HexViewer: Subject<{subject.name}> has data {hex(subject.data).upper()}')
+
+
+class DecimalViewer(Observer):
+    def update(self, subject):
+        print(f'DecViewer: Subject<{subject.name}> has data  {subject.data}')
+
+
+# client
 def main():
-data1 = Data('Data 1')
-data2 = Data('Data 2')
-view1 = DecimalViewer()
-view2 = HexViewer()
-data1.attach(view1)
-data1.attach(view2)
-data2.attach(view2)
-data2.attach(view1)
+    data1 = Data('Data 1')
+    data2 = Data('Data 2')
+    view1 = DecimalViewer()
+    view2 = HexViewer()
+    data1.attach(view1)
+    data1.attach(view2)
+    data2.attach(view2)
+    data2.attach(view1)
 
-    print("Setting Data 1 = 10")
+    print("Setting <Data 1> = 10")
     data1.data = 10
-    print("Setting Data 2 = 15")
+    print("Setting <Data 2>= 15")
     data2.data = 15
-    print("Setting Data 1 = 3")
+    print("Setting <Data 1> = 3")
     data1.data = 3
-    print("Setting Data 2 = 5")
+    print("Setting <Data 2> = 5")
     data2.data = 5
     print("Detach HexViewer from data1 and data2.")
     data1.detach(view2)
     data2.detach(view2)
-    print("Setting Data 1 = 10")
+    print("Setting <Data 1> = 10")
     data1.data = 10
-    print("Setting Data 2 = 15")
+    print("Setting <Data 2> = 15")
     data2.data = 15
 
-if **name** == '**main**':
-main()
+
+if __name__ == '__main__':
+    main()
 ```
+
+#### **优点:**
+
+>1.抽象耦合: 在观察者和被观察者之间, 建立了一个抽象的耦合 ; 由于耦合是抽象的, 可以很容易扩展观察者和被观察者  
+2.广播通信: 观察者模式支持广播通信 , 类似于消息广播, 如果需要接收消息, 只需要注册一下即可
+
+#### **缺点:**
+
+>1.依赖过多: 观察者之间细节依赖过多 , 会增加时间消耗和程序的复杂程度; 这里的细节依赖指的是触发机制 , 触发链条; 如果观察者设置过多, 每次触发都要花很长时间去处理通知  
+2.循环调用: 避免循环调用 , 观察者与被观察者之间绝对不允许循环依赖 , 否则会触发二者之间的循环调用, 导致系统崩溃
 
 ### 21. State（状态）
 
 ![状态](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001100150906-852963744.gif)
 
-**意图：**
+#### **意图：**
 
+```text
 允许一个对象在其内部状态改变时改变它的行为。对象看起来似乎修改了它的类。
+```
 
-**适用性：**
+#### **适用性：**
 
+```text
 一个对象的行为取决于它的状态,并且它必须在运行时刻根据状态改变它的行为。
 
 一个操作中含有庞大的多分支的条件语句，且这些分支依赖于该对象的状态。这个状态通常用一个或多个枚举常量表示。通常,有多个操作包含这一相同的条件结构。State模式将每一个条件分支放入一个独立的类中。这使得你可以根据对象自身的情况将对象的状态作为一个对象，这一对象可以不依赖于其他对象而独立变化。
+```
 
 #### **实现：**
 
 ```python
 #!/usr/bin/python
 # coding:utf8
-'''
+"""
 State
-'''
+    状态模式的设计思想是把不同状态的逻辑分离到不同的状态类中，从而使得增加新状态更容易；
+    状态模式的实现关键在于状态转换。简单的状态转换可以直接由调用方指定，复杂的状态转换可以在内部根据条件触发完成。
+"""
+
 
 class State(object):
-"""Base state. This is to share functionality"""
+    """Base state. This is to share functionality"""
 
     def scan(self):
         """Scan the dial to the next station"""
@@ -2233,52 +2260,76 @@ class State(object):
             self.pos = 0
         print("Scanning... Station is", self.stations[self.pos], self.name)
 
+
 class AmState(State):
-def **init**(self, radio):
-self.radio = radio
-self.stations = ["1250", "1380", "1510"]
-self.pos = 0
-self.name = "AM"
+    def __init__(self, radio):
+        self.radio = radio
+        self.stations = ["1250", "1380", "1510"]
+        self.pos = 0
+        self.name = "AM"
 
     def toggle_amfm(self):
         print("Switching to FM")
         self.radio.state = self.radio.fmstate
 
+
 class FmState(State):
-def **init**(self, radio):
-self.radio = radio
-self.stations = ["81.3", "89.1", "103.9"]
-self.pos = 0
-self.name = "FM"
+    def __init__(self, radio):
+        self.radio = radio
+        self.stations = ["81.3", "89.1", "103.9"]
+        self.pos = 0
+        self.name = "FM"
 
     def toggle_amfm(self):
         print("Switching to AM")
         self.radio.state = self.radio.amstate
 
-class Radio(object):
-"""A radio. It has a scan button, and an AM/FM toggle switch."""
-def **init**(self):
-"""We have an AM state and an FM state"""
-self.amstate = AmState(self)
-self.fmstate = FmState(self)
-self.state = self.amstate
+
+class RadioContext(object):
+    """A radio. It has a scan button, and an AM/FM toggle switch."""
+
+    def __init__(self):
+        """We have an AM state and an FM state"""
+        self.amstate = AmState(self)
+        self.fmstate = FmState(self)
+        self.state = self.amstate
 
     def toggle_amfm(self):
-        self.state.toggle_amfm()
+        # self.state.toggle_amfm()
+        if isinstance(self.state, AmState):
+            print("Switching to FM")
+            self.state = self.fmstate
+        elif isinstance(self.state, FmState):
+            print("Switching to AM")
+            self.state = self.amstate
 
     def scan(self):
         self.state.scan()
 
-# Test our radio out
 
-if **name** == '**main**':
-radio = Radio()
-actions = [radio.scan] *2 + [radio.toggle_amfm] + [radio.scan]* 2
-actions = actions * 2
+# Test our radio out
+if __name__ == '__main__':
+    radio = RadioContext()
+    actions = [radio.scan] * 2 + [radio.toggle_amfm] + [radio.scan] * 2
+    actions = actions * 2
 
     for action in actions:
         action()
 ```
+
+#### **优点：**
+
+>1、封装了转换规则。  
+2、枚举可能的状态，在枚举状态之前需要确定状态种类。  
+3、将所有与某个状态有关的行为放到一个类中，并且可以方便地增加新的状态，只需要改变对象状态即可改变对象的行为。  
+4、允许状态转换逻辑与状态对象合成一体，而不是某一个巨大的条件语句块。  
+5、可以让多个环境对象共享一个状态对象，从而减少系统中对象的个数。
+
+#### **缺点：**
+
+>1、状态模式的使用必然会增加系统类和对象的个数。  
+2、状态模式的结构与实现都较为复杂，如果使用不当将导致程序结构和代码的混乱。  
+3、状态模式对"开闭原则"的支持并不太好，对于可以切换状态的状态模式，增加新的状态类需要修改那些负责状态转换的源代码，否则无法切换到新增状态，而且修改某个状态类的行为也需修改对应类的源代码。
 
 ### 22. Strategy（策略）
 
@@ -2310,20 +2361,19 @@ In most of other languages Strategy pattern is implemented via creating some bas
 subclassing it with a number of concrete strategies (as we can see at http://en.wikipedia.org/wiki/Strategy_pattern),
 however Python supports higher-order functions and allows us to have only one class and inject functions into it's
 instances, as shown in this example.
+策略模式的核心思想是在一个计算方法中把容易变化的算法抽出来作为“策略”参数传进去，从而使得新增策略不必修改原有逻辑。
 """
 import types
 
 
 class StrategyExample:
-    def **init ** (self, func=None):
+    def __init__(self, func=None):
+        self.name = 'Strategy Example 0'
+        if func is not None:
+            self.execute = types.MethodType(func, self)
 
-    self.name = 'Strategy Example 0'
-    if func is not None:
-        self.execute = types.MethodType(func, self)
-
-
-def execute(self):
-    print(self.name)
+    def execute(self):
+        print(self.name)
 
 
 def execute_replacement1(self):
@@ -2334,7 +2384,7 @@ def execute_replacement2(self):
     print(self.name + ' from execute 2')
 
 
-if ** name ** == '**main**':
+if __name__ == '__main__':
     strat0 = StrategyExample()
 
     strat1 = StrategyExample(execute_replacement1)
@@ -2348,31 +2398,43 @@ if ** name ** == '**main**':
     strat2.execute()
 ```
 
+#### **优点：**
+
+>1、算法可以自由切换。  
+2、避免使用多重条件判断。  
+3、扩展性良好。
+
+#### **缺点：**
+
+>1、策略类会增多。  
+2、所有策略类都需要对外暴露。
+
 ### 23. Visitor（访问者）
 
-![访问者](https://images2015.cnblogs.com/blog/824579/201610/824579-20161001100727844-1430710049.gif)
+![访问者](/images/Visitor.png)
 
-**意图：**
+#### **意图：**
 
-定义一个操作中的算法的骨架，而将一些步骤延迟到子类中。TemplateMethod使得子类可以不改变一个算法的结构即可重定义该算法的某些特定步骤。
+```text
+表示一个作用于某对象结构中的各元素的操作。它使你可以在不改变各元素的类的前提下定义作用于这些元素的新操作。
+访问者模式是一种操作一组对象的操作，它的目的是不改变对象的定义，但允许新增不同的访问者，来定义新的操作。
+```
 
-**适用性：**
+#### **适用性：**
 
-一次性实现一个算法的不变的部分，并将可变的行为留给子类来实现。
-
-各子类中公共的行为应被提取出来并集中到一个公共父类中以避免代码重复。这是Opdyke和Johnson所描述过的“重分解以一般化”的一个很好的例子[OJ93]
-。首先识别现有代码中的不同之处，并且将不同之处分离为新的操作。最后，用一个调用这些新的操作的模板方法来替换这些不同的代码。
-
-控制子类扩展。模板方法只在特定点调用“hook ”操作（参见效果一节），这样就只允许在这些点进行扩展。
+```text
+对象结构中对象对应的类很少改变，但经常需要在此对象结构上定义新的操作。  
+需要对一个对象结构中的对象进行很多不同的并且不相关的操作，而需要避免让这些操作"污染"这些对象的类，也不希望在增加新操作时修改这些类。
+```
 
 #### **实现：**
 
 ```python
 #!/usr/bin/python
 # coding:utf8
-'''
+"""
 Visitor
-'''
+"""
 
 
 class Node(object):
@@ -2394,14 +2456,15 @@ class C(A, B):
 class Visitor(object):
     def visit(self, node, *args, **kwargs):
         meth = None
-        for cls in node. **class **.** mro **:
-            meth_name = 'visit_' + cls. ** name **
+        for cls in node.__class__.__mro__:
+            meth_name = 'visit_' + cls.__name__
             meth = getattr(self, meth_name, None)
             if meth:
                 break
 
         if not meth:
             meth = self.generic_visit
+            
         return meth(node, *args, **kwargs)
 
     def generic_visit(self, node, *args, **kwargs):
@@ -2409,6 +2472,9 @@ class Visitor(object):
 
     def visit_B(self, node, *args, **kwargs):
         print('visit_B ' + node.__class__.__name__)
+    
+    def visit_C(self, node, *args, **kwargs):
+        print('visit_C ' + node.__class__.__name__)
 
 
 a = A()
@@ -2420,4 +2486,14 @@ visitor.visit(b)
 visitor.visit(c)
 ```
 
-以上　　
+#### **优点：**
+
+>1、符合单一职责原则。  
+2、优秀的扩展性。  
+3、灵活性。
+
+#### **缺点：**
+
+>1、具体元素对访问者公布细节，违反了迪米特原则。  
+2、具体元素变更比较困难。  
+3、违反了依赖倒置原则，依赖了具体类，没有依赖抽象。

@@ -1,6 +1,7 @@
-'''
+"""
 Observer
-'''
+"""
+from abc import abstractmethod
 
 
 class Subject(object):
@@ -22,9 +23,8 @@ class Subject(object):
             if modifier != observer:
                 observer.update(self)
 
+
 # Example usage
-
-
 class Data(Subject):
     def __init__(self, name=''):
         Subject.__init__(self)
@@ -41,18 +41,24 @@ class Data(Subject):
         self.notify()
 
 
-class HexViewer:
+class Observer:
+    @abstractmethod
+    def update(self):
+        pass
+
+
+class HexViewer(Observer):
     def update(self, subject: Subject):
-        print(f'HexViewer: Subject<{subject.name}> has data {hex(subject.data).upper()}')
+        print(
+            f'HexViewer: Subject<{subject.name}> has data {hex(subject.data).upper()}')
 
 
-class DecimalViewer:
+class DecimalViewer(Observer):
     def update(self, subject):
         print(f'DecViewer: Subject<{subject.name}> has data  {subject.data}')
 
-# Example usage
 
-
+# client
 def main():
     data1 = Data('Data 1')
     data2 = Data('Data 2')
@@ -63,20 +69,20 @@ def main():
     data2.attach(view2)
     data2.attach(view1)
 
-    print("Setting Data 1 = 10")
+    print("Setting <Data 1> = 10")
     data1.data = 10
-    print("Setting Data 2 = 15")
+    print("Setting <Data 2>= 15")
     data2.data = 15
-    print("Setting Data 1 = 3")
+    print("Setting <Data 1> = 3")
     data1.data = 3
-    print("Setting Data 2 = 5")
+    print("Setting <Data 2> = 5")
     data2.data = 5
     print("Detach HexViewer from data1 and data2.")
     data1.detach(view2)
     data2.detach(view2)
-    print("Setting Data 1 = 10")
+    print("Setting <Data 1> = 10")
     data1.data = 10
-    print("Setting Data 2 = 15")
+    print("Setting <Data 2> = 15")
     data2.data = 15
 
 
