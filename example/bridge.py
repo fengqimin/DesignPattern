@@ -1,22 +1,37 @@
-'''
+"""
 Bridge
-'''
+"""
+from abc import abstractmethod
+
+
+# Implementor
+class DrawingAPI(object):
+    @abstractmethod
+    def draw_circle(self, x, y, radius):
+        pass
+
 
 # ConcreteImplementor 1/2
-
-class DrawingAPI1(object):
+class RedCircle(DrawingAPI):
     def draw_circle(self, x, y, radius):
-        print('API1.circle at {}:{} radius {}'.format(x, y, radius))
+        print(f'{self.__class__.__name__} at ({x}, {y}) radius {radius}')
+
 
 # ConcreteImplementor 2/2
-
-class DrawingAPI2(object):
+class GreenCircle(DrawingAPI):
     def draw_circle(self, x, y, radius):
-        print('API2.circle at {}:{} radius {}'.format(x, y, radius))
+        print(f'{self.__class__.__name__} at ({x}, {y}) radius {radius}')
+
+
+# Abstraction
+class Shape(object):
+    @abstractmethod
+    def draw(self):
+        pass
+
 
 # Refined Abstraction
-
-class CircleShape(object):
+class Circle(Shape):
     def __init__(self, x, y, radius, drawing_api):
         self._x = x
         self._y = y
@@ -27,19 +42,16 @@ class CircleShape(object):
     def draw(self):
         self._drawing_api.draw_circle(self._x, self._y, self._radius)
 
-    # high-level i.e. Abstraction specific
-    def scale(self, pct):
-        self._radius *= pct
 
 def main():
     shapes = (
-        CircleShape(1, 2, 3, DrawingAPI1()),
-        CircleShape(5, 7, 11, DrawingAPI2())
+        Circle(1, 2, 3, RedCircle()),
+        Circle(5, 7, 11, GreenCircle())
     )
 
     for shape in shapes:
-        shape.scale(2.5)
         shape.draw()
+
 
 if __name__ == '__main__':
     main()

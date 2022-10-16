@@ -1,3 +1,8 @@
+#!/usr/bin/python
+# coding:utf8
+"""
+Decorator
+"""
 from typing import Any
 
 
@@ -29,6 +34,7 @@ class Decorator:
         print(f'Decorator {self.obj}')
         return self.obj(*args, **kwargs)
 
+
 @Decorator
 class Foo(object):
     def f1(self):
@@ -44,7 +50,5 @@ v.f1()
 v.f2()
 
 u = Foo()
-print(u.f1)
 u.f1()
-print(u.f2)
 u.f2()
