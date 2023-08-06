@@ -49,9 +49,9 @@
 
 ## 设计模式分类
 
->1.创建模式（Creational Patterns），提供实例化的方法，为适合的状况提供相应的对象创建方法。  
->2.结构化模式，通常用来处理实体之间的关系，使得这些实体能够更好地协同工作。  
->3.行为模式，用于在不同的实体建进行通信，为实体之间的通信提供更容易，更灵活的通信方法。
+>1.创建型模式（Creational Patterns），提供实例化的方法，为适合的状况提供相应的对象创建方法。  
+>2.结构型模式，通常用来处理实体之间的关系，使得这些实体能够更好地协同工作。  
+>3.行为型模式，用于在不同的实体建进行通信，为实体之间的通信提供更容易，更灵活的通信方法。
 
 ### [创建型模式(5)](#创建型模式)
 
@@ -210,7 +210,8 @@ if __name__ == '__main__':
 #### **意图：**
 
 ```text
-提供一个创建一系列相关或相互依赖对象的接口，而无需指定它们具体的类。抽象工厂模式可以向客户端提供一个接口，使客户端在不必指定产品的具体情况下，创建多个产品族中的产品对象。
+提供一个创建一系列相关或相互依赖对象的接口，而无需指定它们具体的类。
+抽象工厂模式可以向客户端提供一个接口，使客户端在不必指定产品的具体情况下，创建多个产品族中的产品对象。
 ```
 
 #### **适用性：**
@@ -801,7 +802,8 @@ if __name__ == "__main__":
 
 #### **缺点：**
 
->1.过多地使用适配器，会让系统非常零乱，不易整体进行把握。一个系统如果太多出现这种情况，无异于一场灾难。因此如果不是很有必要，可以不使用适配器，而是直接对系统进行重构。  
+>1.过多地使用适配器，会让系统非常零乱，不易整体进行把握。一个系统如果太多出现这种情况，无异于一场灾难。
+因此如果不是很有必要，可以不使用适配器，而是直接对系统进行重构。  
 >2.由于 JAVA 至多继承一个类，所以至多只能适配一个适配者类，而且目标类必须是抽象类。
 
 ### 7. Bridge（桥接）
@@ -2217,7 +2219,8 @@ if __name__ == '__main__':
 
 #### **缺点:**
 
->1.依赖过多: 观察者之间细节依赖过多 , 会增加时间消耗和程序的复杂程度; 这里的细节依赖指的是触发机制 , 触发链条; 如果观察者设置过多, 每次触发都要花很长时间去处理通知  
+>1.依赖过多: 观察者之间细节依赖过多 , 会增加时间消耗和程序的复杂程度; 这里的细节依赖指的是触发机制 , 触发链条;
+如果观察者设置过多, 每次触发都要花很长时间去处理通知  
 2.循环调用: 避免循环调用 , 观察者与被观察者之间绝对不允许循环依赖 , 否则会触发二者之间的循环调用, 导致系统崩溃
 
 ### 21. State（状态）
@@ -2357,10 +2360,11 @@ if __name__ == '__main__':
 # coding:utf8
 """
 Strategy
-In most of other languages Strategy pattern is implemented via creating some base strategy interface/abstract class and
-subclassing it with a number of concrete strategies (as we can see at http://en.wikipedia.org/wiki/Strategy_pattern),
-however Python supports higher-order functions and allows us to have only one class and inject functions into it's
-instances, as shown in this example.
+In most of other languages Strategy pattern is implemented via creating some 
+base strategy interface/abstract class and subclassing it with a number of 
+concrete strategies (as we can see at http://en.wikipedia.org/wiki/Strategy_pattern),
+however Python supports higher-order functions and allows us to have only one class
+and inject functions into it's instances, as shown in this example.
 策略模式的核心思想是在一个计算方法中把容易变化的算法抽出来作为“策略”参数传进去，从而使得新增策略不必修改原有逻辑。
 """
 import types

@@ -20,7 +20,9 @@ Abstract Factory（抽象工厂）
 """
 
 from abc import abstractmethod, ABCMeta
+
 # ------抽象产品------
+
 
 class PhoneShell(metaclass=ABCMeta):
     @abstractmethod
@@ -41,6 +43,7 @@ class OS(metaclass=ABCMeta):
 
 
 # ------抽象工厂------
+
 
 class PhoneFactory(metaclass=ABCMeta):
     @abstractmethod
@@ -155,6 +158,7 @@ class Phone:
         self.os = factory.make_os()
         self.shell = factory.make_shell()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     p1 = Phone(IPhoneFactory())
     p1.show_info()

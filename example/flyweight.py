@@ -31,8 +31,9 @@ class CardPool(object):
 if __name__ == '__main__':
     # comment __new__ and uncomment __init__ to see the difference
     c1 = CardPool('9', 'h')
-    c2 = CardPool('9', 'h')
+    c2 = CardPool('8', 'h')
+    c3 = CardPool('9', 'h')
     print(list(CardPool._pool.keys()))
-    print(c1, c2)
-    print(c1 == c2)
-    print(id(c1), id(c2))
+    print(c1, c2, c3)
+    print(c1 == c3)
+    print(id(c1), id(c2), id(c3))
